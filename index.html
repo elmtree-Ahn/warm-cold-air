@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>데우고 식히는 공기 탐험 | 어게인 실험과학 수학학원</title>
+<meta name="description" content="손으로 만지며 알아보는 샤를의 법칙, 데우면 커지고 식히면 작아지는 공기 탐험 놀이">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6fbff; --ice:#e3f3fd; --ice2:#bfe4fb; --blue:#3a9ae0; --blue-d:#2476b8; --cloud:#ffffff;
+  --org:#ff8a1f; --org-d:#c85f00; --org-s:#fff0dd;
+  --mint:#dcf5ea; --mint2:#8fdcb8; --mint-d:#2f9e6e;
+  --ink:#33414f; --sub:#6c7a8a; --line:#d3e7f5;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-weight:500}
+body{min-height:100vh;display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;overflow-x:hidden;
+  background:linear-gradient(90deg,rgba(58,154,224,.06) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(rgba(58,154,224,.06) 1px,transparent 1px) 0 0/34px 34px,
+  radial-gradient(circle at 0% 0%,#fff1e0 0 240px,transparent 420px),radial-gradient(circle at 100% 30%,#dff1fd 0 220px,transparent 420px),var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+
+.bbtn{font-family:"Jua",sans-serif;font-size:22px;min-height:62px;min-width:150px;padding:10px 28px;color:#fff;background:var(--blue);border-radius:999px;
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.12),0 5px 0 var(--blue-d);word-break:keep-all}
+.bbtn:active{transform:translateY(3px)}
+.bbtn:disabled{opacity:.35;cursor:default}
+.bbtn.org{background:var(--org);box-shadow:inset 0 -6px 0 rgba(0,0,0,.1),0 5px 0 var(--org-d)}
+.bbtn.white{background:#fff;color:var(--blue-d);box-shadow:inset 0 -6px 0 rgba(0,0,0,.05),0 5px 0 var(--line)}
+.bbtn.white.on{background:#fff3c4;color:#8a6400;box-shadow:inset 0 -6px 0 rgba(0,0,0,.06),0 5px 0 #e8c95a;opacity:1}
+.bbtn.pulse{animation:pulse 1.2s infinite}
+.bbtn[hidden]{display:none}
+
+header{position:sticky;top:0;z-index:30;background:var(--cloud);box-shadow:0 3px 0 var(--line);padding:10px 16px}
+.head-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:54px;flex:none}
+.titles{flex:1;min-width:0}
+.titles .brand{font-family:"Jua",sans-serif;font-size:16px;color:var(--sub)}
+.titles h1{margin:0;font-family:"Jua",sans-serif;font-weight:400;font-size:clamp(22px,4vw,34px);color:var(--org-d);line-height:1.15;word-break:keep-all}
+.share{min-width:0;font-size:18px;min-height:54px;padding:8px 22px;display:flex;align-items:center;gap:6px;flex:none}
+
+nav{max-width:1100px;width:100%;margin:14px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tab{position:relative;min-height:64px;border-radius:20px;background:#fff;font-family:"Jua",sans-serif;font-size:clamp(15px,1.9vw,19px);line-height:1.2;padding:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:3px solid transparent;box-shadow:0 3px 0 var(--line);word-break:keep-all;text-align:center}
+.tab .n{width:24px;height:24px;border-radius:50%;background:var(--ice2);color:var(--blue-d);font-size:14px;display:grid;place-items:center}
+.tab.on{background:var(--org-s);border-color:var(--org)}
+.tab.on .n{background:var(--org);color:#fff}
+.tab .star{position:absolute;top:-10px;right:-4px;font-size:22px;display:none}
+.tab.done .star{display:block;animation:pop .5s}
+
+main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:16px}
+.panel{display:none;animation:fadein .3s}
+.panel.on{display:block}
+.coach{display:flex;align-items:flex-end;gap:10px;margin:4px 0 12px}
+.coach svg{width:70px;height:78px;flex:none;animation:float 2.4s ease-in-out infinite}
+.bubble{position:relative;flex:1;min-width:0;background:#fff;border:3px solid var(--ice2);border-radius:22px;padding:12px 18px;font-family:"Jua",sans-serif;
+  font-size:clamp(18px,2.4vw,24px);line-height:1.45;word-break:keep-all;min-height:58px}
+.bubble::before{content:"";position:absolute;left:-14px;bottom:16px;border:10px solid transparent;border-right:14px solid var(--ice2);border-left:0}
+.bubble b{font-weight:400;color:var(--org-d)}
+.bubble b.c{color:var(--blue-d)}
+.bubble.new{animation:pop .4s}
+.card{display:none;margin:16px auto 0;max-width:880px;border-radius:24px;background:var(--mint);border:4px solid var(--mint2);padding:16px 20px;
+  font-family:"Jua",sans-serif;font-size:clamp(19px,2.5vw,24px);text-align:center;line-height:1.5;color:#1f6b4b;word-break:keep-all}
+.card.on{display:block;animation:pop .5s}
+.card .big{display:block;font-size:1.3em;color:#17603f}
+/* 가로 화면에서도 장면이 한눈에 들어오도록 높이에 맞춰 너비를 줄임 */
+.stage{position:relative;width:100%;max-width:max(480px,calc((100vh - 310px)*1.7778));margin:0 auto;border-radius:28px;overflow:hidden;touch-action:none;box-shadow:0 6px 0 var(--line);background:#f4fbff}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.stage.shake{animation:shake .35s}
+.row{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.hint{position:absolute;font-family:"Jua",sans-serif;font-size:clamp(14px,2.1vw,21px);color:#8a4200;background:#fff;border:3px solid var(--org);border-radius:999px;padding:4px 14px;
+  animation:bob 1s infinite;z-index:5;white-space:nowrap;pointer-events:none;transform:translateX(-50%)}
+.hint[hidden]{display:none}
+.cap{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);background:#fff3c4;border:3px solid #ffd666;border-radius:999px;padding:5px 16px;font-family:"Jua",sans-serif;
+  font-size:clamp(13px,2vw,21px);white-space:nowrap;z-index:5;max-width:96%;pointer-events:none}
+.cap.hot{background:var(--org-s);border-color:var(--org);color:#8a4200}
+.cap.cold{background:var(--ice);border-color:var(--blue);color:var(--blue-d)}
+.cap[hidden]{display:none}
+.steam{fill:none;stroke:#fff;stroke-width:12;stroke-linecap:round;opacity:.9;animation:steam 1.8s ease-in infinite}
+
+/* 밀어서 조절하는 손잡이 */
+.slide{display:flex;align-items:center;gap:12px;width:min(100%,640px);background:#fff;border-radius:999px;padding:6px 22px;box-shadow:0 4px 0 var(--line);
+  font-family:"Jua",sans-serif;font-size:clamp(17px,2.4vw,24px);white-space:nowrap}
+.slide .c{color:var(--blue-d)} .slide .w{color:var(--org-d)}
+.slide input{flex:1;min-width:0;height:60px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;touch-action:none;cursor:pointer}
+.slide input::-webkit-slider-runnable-track{height:18px;border-radius:99px;background:linear-gradient(90deg,#7cc4ee,#ffd666,var(--org))}
+.slide input::-moz-range-track{height:18px;border-radius:99px;background:linear-gradient(90deg,#7cc4ee,#ffd666,var(--org))}
+.slide input::-webkit-slider-thumb{-webkit-appearance:none;width:56px;height:56px;margin-top:-19px;border-radius:50%;background:#fff;border:7px solid var(--org);box-shadow:0 4px 0 var(--org-d)}
+.slide input::-moz-range-thumb{width:44px;height:44px;border-radius:50%;background:#fff;border:7px solid var(--org);box-shadow:0 4px 0 var(--org-d)}
+
+/* O/X 퀴즈 */
+.dots{display:flex;gap:10px;justify-content:center;margin:6px 0 12px}
+.dots i{width:34px;height:34px;border-radius:50%;background:#fff;border:3px solid var(--ice2);font-style:normal;font-family:"Jua",sans-serif;font-size:17px;color:var(--blue-d);display:grid;place-items:center}
+.dots i.now{border-color:var(--org);background:var(--org-s);color:var(--org-d)}
+.dots i.ok{background:var(--mint2);border-color:var(--mint-d);color:#fff}
+.qbox{max-width:880px;margin:0 auto;background:#fff;border:4px solid var(--ice2);border-radius:26px;padding:20px;text-align:center;font-family:"Jua",sans-serif;
+  font-size:clamp(22px,3.4vw,34px);line-height:1.4;word-break:keep-all;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.qbox small{font-size:.55em;color:var(--sub)}
+.ox{display:flex;gap:24px;justify-content:center;margin-top:18px}
+.oxb{width:clamp(120px,24vw,180px);height:clamp(120px,24vw,180px);border-radius:32px;background:#fff;font-family:"Jua",sans-serif;font-size:clamp(70px,14vw,110px);line-height:1;
+  display:grid;place-items:center;box-shadow:inset 0 -8px 0 rgba(0,0,0,.06),0 6px 0 var(--line)}
+.oxb.o{color:var(--blue);border:5px solid var(--blue)}
+.oxb.x{color:var(--org);border:5px solid var(--org)}
+.oxb:active{transform:translateY(4px)}
+.oxb:disabled{opacity:.4}
+.oxb.pick{background:var(--mint)}
+.qfb{min-height:64px;margin:16px auto 0;max-width:880px;border-radius:20px;padding:10px 16px;font-family:"Jua",sans-serif;font-size:clamp(18px,2.4vw,23px);
+  text-align:center;line-height:1.4;word-break:keep-all;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--sub)}
+.qfb.good{background:var(--mint);color:#1f6b4b;animation:pop .4s}
+.qfb.bad{background:#fff3c4;color:#8a6400;animation:shake .4s}
+
+footer{margin-top:28px;background:var(--blue-d);color:#fff;text-align:center;padding:20px 16px 26px}
+footer .brand{font-family:"Jua",sans-serif;font-size:22px}
+footer .tel{margin-top:4px;font-size:18px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,40px);opacity:0;background:var(--ink);color:#fff;font-family:"Jua",sans-serif;font-size:20px;padding:14px 26px;border-radius:999px;z-index:70;transition:.25s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.fly{position:fixed;bottom:-160px;width:70px;z-index:58;pointer-events:none;animation:upup linear forwards}
+.fly svg{display:block;width:100%;height:auto;animation:sway 1.1s ease-in-out infinite alternate}
+
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{margin-left:0}25%{margin-left:-7px}75%{margin-left:7px}}
+@keyframes bob{50%{margin-top:-6px}}
+@keyframes float{50%{transform:translateY(-6px) rotate(2deg)}}
+@keyframes pulse{50%{transform:scale(1.06)}}
+@keyframes steam{0%{transform:translateY(0);opacity:0}30%{opacity:.9}100%{transform:translateY(-70px);opacity:0}}
+@keyframes upup{to{transform:translateY(calc(-100vh - 320px))}}
+@keyframes sway{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+@media (max-width:760px){
+  nav{grid-template-columns:repeat(3,1fr);gap:6px}
+  .tab{font-size:14px;min-height:58px;border-radius:14px}
+  .share span{display:none}
+  .share{padding:8px 16px}
+  .titles .brand{font-size:13px}
+  .coach svg{width:54px;height:60px}
+  .bbtn{font-size:19px;padding:10px 20px}
+  .slide{padding:6px 14px;gap:8px}
+  .cap{position:static;transform:none;display:block;width:fit-content;margin:8px auto;white-space:normal;text-align:center;font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-in">
+    <svg class="logo" viewBox="0 0 120 130" aria-hidden="true"><use href="#char"/></svg>
+    <div class="titles">
+      <div class="brand">어게인 실험과학 수학학원</div>
+      <h1>🌡️ 데우고 식히는 공기 탐험!</h1>
+    </div>
+    <button class="bbtn white share" id="share" aria-label="공유하기">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2476b8" stroke-width="2.6" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+      <span>공유하기</span>
+    </button>
+  </div>
+</header>
+
+<!-- 길잡이 '공기 알갱이' 친구와 공용 그림 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="char">
+      <ellipse cx="60" cy="122" rx="30" ry="6" fill="#33414f" opacity=".12"/>
+      <circle cx="60" cy="62" r="50" fill="#9fd6f6" stroke="#3a9ae0" stroke-width="4"/>
+      <ellipse cx="40" cy="36" rx="9" ry="15" fill="#fff" opacity=".6" transform="rotate(-32 40 36)"/>
+      <circle cx="46" cy="60" r="5.5" fill="#33414f"/><circle cx="74" cy="60" r="5.5" fill="#33414f"/>
+      <circle cx="47.6" cy="58.4" r="1.8" fill="#fff"/><circle cx="75.6" cy="58.4" r="1.8" fill="#fff"/>
+      <path d="M50 74 Q60 83 70 74" stroke="#33414f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="35" cy="72" r="6" fill="#ffb07a" opacity=".85"/><circle cx="85" cy="72" r="6" fill="#ffb07a" opacity=".85"/>
+    </g>
+    <marker id="aho" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#ff8a1f"/></marker>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7fbff"/><stop offset="1" stop-color="#e6f3fc"/></linearGradient>
+    <g id="hand">
+      <rect x="-150" y="-62" width="160" height="124" rx="56" fill="#ffd2a8" stroke="#e8a878" stroke-width="6"/>
+      <rect x="-10" y="-58" width="78" height="30" rx="15" fill="#ffd2a8" stroke="#e8a878" stroke-width="5"/>
+      <rect x="-10" y="-24" width="84" height="30" rx="15" fill="#ffd2a8" stroke="#e8a878" stroke-width="5"/>
+      <rect x="-10" y="10" width="80" height="30" rx="15" fill="#ffd2a8" stroke="#e8a878" stroke-width="5"/>
+      <rect x="-14" y="42" width="66" height="26" rx="13" fill="#ffd2a8" stroke="#e8a878" stroke-width="5"/>
+      <rect x="-60" y="-96" width="34" height="74" rx="17" fill="#ffd2a8" stroke="#e8a878" stroke-width="5" transform="rotate(40 -43 -59)"/>
+    </g>
+  </defs>
+</svg>
+
+<nav id="tabs">
+  <button class="tab on"><span class="n">1</span>🪙 병 위 동전<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">2</span>🎈 풍선 플라스크<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">3</span>🫙 찌그러지는 캔<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">4</span>🔬 공기 알갱이<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">5</span>🧩 O/X 퀴즈<span class="star">⭐</span></button>
+</nav>
+
+<main>
+<!-- 1. 병 위 동전 -->
+<section class="panel on" id="p1">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b1">냉장고에서 꺼낸 <b class="c">차가운 병</b> 위에 500원 동전을 올렸어요.<br>병을 <b>두 손으로 꾹</b> 잡고 기다려 볼까요?</div></div>
+  <div class="stage">
+    <svg id="s1" viewBox="0 0 1600 900" role="img" aria-label="차가운 병 위에 동전이 올려진 그림">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect y="800" width="1600" height="100" fill="#f3dcb4"/>
+      <!-- 온도계 -->
+      <g transform="translate(1330 0)">
+        <text y="250" text-anchor="middle" font-family="Jua" font-size="40" fill="#6c7a8a">병 속 공기</text>
+        <rect x="-22" y="280" width="44" height="440" rx="22" fill="#fff" stroke="#aab6c2" stroke-width="6"/>
+        <rect id="thf1" x="-12" y="700" width="24" height="20" rx="12" fill="#3a9ae0"/>
+        <circle id="thb1" cy="750" r="44" fill="#3a9ae0" stroke="#aab6c2" stroke-width="6"/>
+        <text id="tht1" y="850" text-anchor="middle" font-family="Jua" font-size="40" fill="#2476b8">차가워요</text>
+      </g>
+      <!-- 병 -->
+      <path id="bot1" d="M745 222 V300 C745 340 640 352 640 412 V770 Q640 800 670 800 H930 Q960 800 960 770 V412 C960 352 855 340 855 300 V222 Z" fill="#dff1fc" fill-opacity=".75" stroke="#7cc4ee" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M675 440 V740" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity=".7"/>
+      <g id="frost1" fill="#fff"></g>
+      <g id="dot1"></g>
+      <g id="esc1"></g>
+      <!-- 동전 -->
+      <g id="coin1">
+        <ellipse cx="800" cy="222" rx="80" ry="16" fill="#c9a24a"/>
+        <ellipse cx="800" cy="212" rx="80" ry="16" fill="#f0cf6e" stroke="#c9a24a" stroke-width="5"/>
+        <text x="800" y="221" text-anchor="middle" font-family="Jua" font-size="26" fill="#a07a20">500</text>
+      </g>
+      <text id="ddk1" x="960" y="170" font-family="Jua" font-size="58" fill="#c85f00" opacity="0">딸깍!</text>
+      <!-- 손 -->
+      <g id="hl1"><use href="#hand"/></g>
+      <g id="hr1"><use href="#hand"/></g>
+      <g id="warm1" opacity="0" stroke="#ff8a1f" stroke-width="9" fill="none" stroke-linecap="round">
+        <path d="M560 380 q16 -20 0 -40 q-16 -20 0 -40"/><path d="M1040 380 q16 -20 0 -40 q-16 -20 0 -40"/>
+        <path d="M530 640 q16 -20 0 -40 q-16 -20 0 -40"/><path d="M1070 640 q16 -20 0 -40 q-16 -20 0 -40"/>
+      </g>
+      <rect id="hit1" width="1600" height="900" fill="transparent" style="cursor:pointer"/>
+    </svg>
+    <div class="hint" id="h1" style="left:50%;top:60%">병을 꾹 잡고 있어요!</div>
+    <div class="cap cold" id="cap1">차가운 병이에요. 동전이 가만히 있어요.</div>
+  </div>
+  <div class="row"><button class="bbtn white" id="re1" hidden>🧊 차가운 병으로 다시</button></div>
+  <div class="card" id="c1"><span class="big">손의 온기가 병 속 공기를 데워 부피가 커졌어요!</span>부피가 커진 공기가 동전 틈으로 조금씩 빠져나오면서 동전을 딸깍 딸깍 들어 올려요.</div>
+</section>
+
+<!-- 2. 풍선 플라스크 -->
+<section class="panel" id="p2">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b2">플라스크 입구에 풍선을 씌웠어요.<br>플라스크를 <b>끌어서</b> <b>뜨거운 물</b>이나 <b class="c">얼음물</b>에 넣어 보세요!</div></div>
+  <div class="stage">
+    <svg id="s2" viewBox="0 0 1600 900" role="img" aria-label="풍선을 씌운 플라스크와 뜨거운 물, 얼음물 수조">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect y="820" width="1600" height="80" fill="#f3dcb4"/>
+      <text x="310" y="878" text-anchor="middle" font-family="Jua" font-size="50" fill="#c85f00">🔥 뜨거운 물</text>
+      <text x="1290" y="878" text-anchor="middle" font-family="Jua" font-size="50" fill="#2476b8">🧊 얼음물</text>
+      <g id="stm2"><path class="steam" d="M200 455 q20 -30 0 -60"/><path class="steam" d="M310 455 q20 -30 0 -60" style="animation-delay:.6s"/><path class="steam" d="M420 455 q20 -30 0 -60" style="animation-delay:1.2s"/></g>
+      <rect x="90" y="470" width="440" height="350" rx="20" fill="#fff" opacity=".6"/>
+      <rect x="1070" y="470" width="440" height="350" rx="20" fill="#fff" opacity=".6"/>
+      <g id="zoomline2"></g>
+      <g id="fl2" style="cursor:grab">
+        <rect x="-170" y="-600" width="340" height="610" fill="transparent"/>
+        <path d="M-30 -330 V-232 L-140 -22 Q-150 0 -122 0 H122 Q150 0 140 -22 L30 -232 V-330 Z" fill="#e9f7ff" fill-opacity=".8" stroke="#7cc4ee" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M-100 -40 L-20 -200" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+        <g id="bal2"></g>
+      </g>
+      <rect x="90" y="560" width="440" height="260" fill="#ff9a4a" opacity=".42"/>
+      <rect x="1070" y="560" width="440" height="260" fill="#6fbbef" opacity=".42"/>
+      <g fill="#fff" stroke="#9fd6f6" stroke-width="5" opacity=".95"><rect x="1100" y="540" width="70" height="60" rx="10" transform="rotate(-12 1135 570)"/><rect x="1420" y="545" width="64" height="56" rx="10" transform="rotate(14 1452 573)"/><rect x="1180" y="700" width="56" height="50" rx="10" transform="rotate(20 1208 725)"/></g>
+      <rect x="90" y="470" width="440" height="350" rx="20" fill="none" stroke="#e8a878" stroke-width="8"/>
+      <rect x="1070" y="470" width="440" height="350" rx="20" fill="none" stroke="#7cc4ee" stroke-width="8"/>
+      <!-- 확대 동그라미 -->
+      <g transform="translate(800 165)">
+        <circle r="128" fill="#fff" stroke="#aab6c2" stroke-width="8"/>
+        <clipPath id="zc2"><circle r="122"/></clipPath>
+        <rect id="zbg2" x="-122" y="-122" width="244" height="244" fill="#fff" clip-path="url(#zc2)"/>
+        <g id="zd2" clip-path="url(#zc2)"></g>
+        <text x="-165" y="10" text-anchor="end" font-family="Jua" font-size="38" fill="#6c7a8a">🔍 플라스크 속</text>
+        <text x="-165" y="54" text-anchor="end" font-family="Jua" font-size="38" fill="#6c7a8a">공기 알갱이</text>
+      </g>
+      <text id="word2" x="800" y="420" text-anchor="middle" font-family="Jua" font-size="80" fill="#c85f00" opacity="0"></text>
+    </svg>
+    <div class="hint" id="h2" style="left:50%;top:44%">⬅ 플라스크를 끌어요 ➡</div>
+    <div class="cap" id="cap2">방 안 온도예요. 풍선이 축 늘어져 있어요.</div>
+  </div>
+  <div class="card" id="c2"><span class="big">데우면 쑥! 식히면 쏙!</span>뜨거운 물에서는 플라스크 속 공기의 부피가 커져서 풍선이 부풀어요. 얼음물에서는 공기의 부피가 작아지고, 바깥 공기가 풍선을 입구 쪽으로 밀어 넣어요.</div>
+</section>
+
+<!-- 3. 찌그러지는 캔 -->
+<section class="panel" id="p3">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b3">빈 캔에 물을 조금 넣고 데웠어요. <b>김</b>이 모락모락 나요.<br>뜨거운 캔을 어떻게 해 볼까요? 아래에서 골라 보세요!</div></div>
+  <div class="stage" id="st3">
+    <svg id="s3" viewBox="0 0 1600 900" role="img" aria-label="뜨겁게 데운 캔과 책상, 찬물 그릇">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect y="820" width="1600" height="80" fill="#f3dcb4"/>
+      <!-- 책상 -->
+      <rect x="110" y="700" width="420" height="34" rx="10" fill="#c9a777" stroke="#8a5d2a" stroke-width="6"/>
+      <path d="M150 734 V820 M490 734 V820" stroke="#8a5d2a" stroke-width="18" stroke-linecap="round"/>
+      <text x="320" y="790" text-anchor="middle" font-family="Jua" font-size="40" fill="#8a5d2a">책상</text>
+      <!-- 데우는 판 -->
+      <rect x="680" y="750" width="240" height="70" rx="16" fill="#8a96a3"/>
+      <rect id="plate3" x="700" y="740" width="200" height="18" rx="9" fill="#ff7a3d"/>
+      <!-- 찬물 그릇 뒤 -->
+      <path d="M1080 600 H1520 L1490 820 H1110 Z" fill="#fff" opacity=".6"/>
+      <text x="1300" y="580" text-anchor="middle" font-family="Jua" font-size="44" fill="#2476b8">💧 찬물</text>
+      <g id="stm3"><path class="steam" d="M770 430 q20 -30 0 -60"/><path class="steam" d="M800 440 q20 -30 0 -60" style="animation-delay:.6s"/><path class="steam" d="M830 430 q20 -30 0 -60" style="animation-delay:1.2s"/></g>
+      <g id="can3"></g>
+      <g id="tong3" style="display:none" stroke="#6c7a8a" stroke-width="16" stroke-linecap="round" fill="none"></g>
+      <path d="M1088 640 H1512 L1490 820 H1110 Z" fill="#6fbbef" opacity=".5"/>
+      <path d="M1080 600 H1520 L1490 820 H1110 Z" fill="none" stroke="#7cc4ee" stroke-width="8" stroke-linejoin="round"/>
+      <g id="arr3" style="display:none"></g>
+      <text id="bbak3" x="880" y="380" text-anchor="middle" font-family="Jua" font-size="110" fill="#c85f00" style="display:none">빡!</text>
+    </svg>
+    <div class="cap hot" id="cap3">따끈따끈 데운 캔이에요</div>
+  </div>
+  <div class="row" id="m3">
+    <button class="bbtn white" id="desk3">🪑 책상에 그냥 두기</button>
+    <button class="bbtn" id="cold3">💧 찬물에 거꾸로 담그기</button>
+    <button class="bbtn org pulse" id="re3" hidden>🔁 다시 데우기</button>
+  </div>
+  <div class="card" id="c3"><span class="big">캔 속이 확 식어 안쪽 공기압이 약해지자, 바깥 공기가 캔을 눌렀어요!</span>캔이 무언가를 빨아들인 것이 아니에요. 늘 누르고 있던 바깥 공기가 캔을 꾹 눌러 찌그러뜨렸어요.</div>
+</section>
+
+<!-- 4. 공기 알갱이 -->
+<section class="panel" id="p4">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b4">상자 안에 <b>공기 알갱이</b>가 들어 있어요. 오른쪽 벽은 움직일 수 있어요.<br>아래 손잡이를 <b class="c">차갑게</b>, <b>따뜻하게</b> 밀어 보세요!</div></div>
+  <div class="stage">
+    <svg id="s4" viewBox="0 0 1600 900" role="img" aria-label="공기 알갱이가 들어 있는 상자와 움직이는 벽">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect id="boxbg4" x="150" y="220" width="700" height="470" fill="#fff"/>
+      <g id="dot4"></g>
+      <path d="M150 210 V700 M150 216 H1500 M150 694 H1500" stroke="#7cc4ee" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <g id="pis4">
+        <rect x="0" y="222" width="40" height="466" rx="10" fill="#8fdcb8" stroke="#2f9e6e" stroke-width="6"/>
+        <rect x="40" y="430" width="200" height="40" rx="10" fill="#c7eedb" stroke="#2f9e6e" stroke-width="5"/>
+      </g>
+      <rect id="heat4" x="150" y="712" width="1350" height="40" rx="20" fill="#ff9a4a"/>
+      <text id="heatT4" x="825" y="745" text-anchor="middle" font-family="Jua" font-size="34" fill="#fff"></text>
+      <g id="vol4">
+        <path id="volp4" d="" stroke="#6c7a8a" stroke-width="7" fill="none" stroke-linejoin="round"/>
+        <text id="volt4" y="840" text-anchor="middle" font-family="Jua" font-size="46" fill="#6c7a8a">부피</text>
+      </g>
+      <text x="800" y="150" text-anchor="middle" font-family="Jua" font-size="44" fill="#2f9e6e">알갱이 개수는 언제나 18개!</text>
+    </svg>
+    <div class="cap" id="cap4" style="bottom:auto;top:3%">알갱이는 커지지 않아요. 사이가 멀어져요!</div>
+  </div>
+  <div class="row"><label class="slide"><span class="c">❄️ 차갑게</span><input type="range" id="tmp4" min="0" max="100" value="45" step="1" aria-label="상자 속 공기 온도"><span class="w">따뜻하게 🔥</span></label></div>
+  <div class="card" id="c4"><span class="big">알갱이는 커지지 않아요. 사이가 멀어져요!</span>공기를 데우면 공기 알갱이가 빠르게 움직이며 서로 멀어져서 부피가 커져요. 식히면 천천히 움직이며 가까이 모여서 부피가 작아져요. 공기가 새로 생기거나 없어지지는 않아요.</div>
+</section>
+
+<!-- 5. O/X 퀴즈 -->
+<section class="panel" id="p5">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b5">오늘 알아본 것을 떠올려 봐요.<br>맞으면 <b>O</b>, 틀리면 <b>X</b>를 꾹 눌러요!</div></div>
+  <div class="dots" id="dots5"></div>
+  <div class="qbox" id="q5"></div>
+  <div class="ox"><button class="oxb o" id="o5" aria-label="맞아요">O</button><button class="oxb x" id="x5" aria-label="틀려요">X</button></div>
+  <div class="qfb" id="fb5"></div>
+  <div class="row"><button class="bbtn org pulse" id="nx5" hidden>다음 문제 ▶</button><button class="bbtn white" id="re5" hidden>🔁 다시 하기</button></div>
+  <div class="card" id="c5"><span class="big">와, 샤를의 법칙 박사가 되었어요!</span>공기를 데우면 부피가 커지고, 식히면 부피가 작아져요. 이것을 샤를의 법칙이라고 해요.</div>
+</section>
+</main>
+
+<footer>
+  <div class="brand">어게인 실험과학 수학학원</div>
+  <div class="tel">교육문의 010.2976.5774</div>
+</footer>
+<div class="toast" id="toast"></div>
+<canvas id="fx"></canvas>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+const lerp = (a, b, t) => a + (b - a) * t;
+const show = (el, on) => el.style.display = on ? '' : 'none';
+// 차가운 파랑 → 따뜻한 주황 (t: 0~1)
+const tcol = t => { const a = [58, 154, 224], b = [255, 138, 31]; return `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], clamp(t, 0, 1)))).join(',')})`; };
+
+/* ---------- 소리 ---------- */
+let ac;
+const audio = () => ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+function tone(f, d = .15, type = 'sine', at = 0, v = .18, f2) {
+  try {
+    const a = audio(), t = a.currentTime + at, o = a.createOscillator(), g = a.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t + d);
+  } catch (e) {}
+}
+function noise(d, freq, v, type = 'lowpass', at = 0) {
+  try {
+    const a = audio(), n = a.sampleRate * d, b = a.createBuffer(1, n, a.sampleRate), ch = b.getChannelData(0);
+    for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * i / n);
+    const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+    f.type = type; f.frequency.value = freq; g.gain.value = v;
+    s.buffer = b; s.connect(f).connect(g).connect(a.destination); s.start(a.currentTime + at);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => { tone(520, .09, 'triangle'); tone(780, .1, 'triangle', .06); },
+  good: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .25, 'triangle', i * .09)),
+  win: () => [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => tone(f, .3, 'triangle', i * .1)),
+  bad: () => { tone(300, .18, 'triangle', 0, .12); tone(220, .28, 'triangle', .15, .12); },
+  click: () => { tone(2200, .035, 'square', 0, .07); tone(1700, .04, 'square', .08, .07); },
+  puff: () => tone(300, .5, 'sine', 0, .2, 900),
+  shrink: () => tone(800, .45, 'sine', 0, .18, 260),
+  bang: () => { noise(.3, 2500, .9, 'lowpass'); tone(120, .3, 'square', 0, .2, 60); },
+  splash: () => noise(.4, 1600, .35, 'bandpass'),
+  sizzle: () => noise(.7, 4000, .12, 'highpass')
+};
+
+/* ---------- 반짝이 · 꽃가루 ---------- */
+const cv = $('#fx'), cx = cv.getContext('2d');
+let parts = [], running = false;
+const COLORS = ['#ff8a1f', '#3a9ae0', '#ffd666', '#7fd6b0', '#ffffff', '#ffb866'];
+function resizeFx() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+addEventListener('resize', resizeFx); resizeFx();
+function sparkle(x, y, n = 22) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * 6.28, sp = rand(3, 8);
+    parts.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2, r: 0, vr: .2, s: rand(7, 12), c: COLORS[i % 4], life: 50, star: true });
+  }
+  kick();
+}
+function confetti() {
+  for (let i = 0; i < 140; i++) parts.push({ x: rand(0, innerWidth), y: rand(-200, -10), vx: rand(-1.5, 1.5), vy: rand(1, 4), r: rand(0, 6), vr: rand(-.2, .2), s: rand(6, 11), c: COLORS[i % 6], life: 200, star: false });
+  kick();
+}
+function kick() { if (!running) { running = true; requestAnimationFrame(fxLoop); } }
+function fxLoop() {
+  const k = devicePixelRatio; cx.clearRect(0, 0, cv.width, cv.height);
+  parts = parts.filter(p => p.life-- > 0 && p.y < innerHeight + 40);
+  for (const p of parts) {
+    p.vy += p.star ? .14 : .03; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    cx.save(); cx.translate(p.x * k, p.y * k); cx.rotate(p.r); cx.globalAlpha = Math.min(1, p.life / 20); cx.fillStyle = p.c;
+    if (p.star) { cx.beginPath(); for (let i = 0; i < 10; i++) { const rr = (i % 2 ? p.s / 2.4 : p.s) * k, a = i * Math.PI / 5; cx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } cx.fill(); }
+    else { cx.strokeStyle = '#d3e7f5'; cx.lineWidth = k; cx.fillRect(-p.s * k / 2, -p.s * k / 4, p.s * k, p.s * k / 2); cx.strokeRect(-p.s * k / 2, -p.s * k / 4, p.s * k, p.s * k / 2); }
+    cx.restore();
+  }
+  if (parts.length) requestAnimationFrame(fxLoop); else { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
+}
+// 보상: 풍선들이 둥실둥실 날아오름
+const BAL = c => `<svg viewBox="0 0 100 150"><path d="M50 112 Q42 130 54 148" stroke="#6c7a8a" stroke-width="3" fill="none"/><ellipse cx="50" cy="56" rx="40" ry="50" fill="${c}"/><path d="M44 104 L56 104 L50 114Z" fill="${c}"/><ellipse cx="36" cy="36" rx="8" ry="14" fill="#fff" opacity=".5" transform="rotate(-25 36 36)"/></svg>`;
+function celebrate() {
+  sfx.win(); confetti();
+  for (let i = 0; i < 7; i++) {
+    const b = document.createElement('div'); b.className = 'fly';
+    b.style.left = rand(4, 88) + 'vw';
+    b.style.animationDuration = rand(3.2, 5) + 's'; b.style.animationDelay = rand(0, 1.2) + 's';
+    b.innerHTML = BAL(['#ff6b8a', '#ff8a1f', '#3a9ae0', '#ffd666', '#7fd6b0'][i % 5]);
+    b.addEventListener('animationend', e => e.target === b && b.remove()); document.body.appendChild(b);
+  }
+}
+
+/* ---------- 공통 ---------- */
+function coach(id, html) { const el = $(id); el.classList.remove('new'); void el.offsetWidth; el.classList.add('new'); el.innerHTML = html; }
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2000); }
+function showCard(id) { const c = $(id); c.classList.remove('on'); void c.offsetWidth; c.classList.add('on'); setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300); }
+function setCap(el, t, cls) { if (el.textContent !== t) { el.textContent = t; el.className = 'cap' + (cls ? ' ' + cls : ''); } }
+const tabs = $$('.tab'), panels = $$('.panel');
+function finish(i, card) { showCard(card); if (!tabs[i].classList.contains('done')) { tabs[i].classList.add('done'); celebrate(); } else sfx.good(); }
+function openTab(i) {
+  tabs.forEach((x, j) => x.classList.toggle('on', j === i));
+  panels.forEach((p, j) => p.classList.toggle('on', j === i));
+}
+tabs.forEach((t, i) => t.onclick = () => { openTab(i); sfx.pop(); });
+// 주소 끝에 #1~#5 를 붙이면 그 탭이 바로 열림
+{ const h = +location.hash.slice(1); if (h >= 1 && h <= 5) openTab(h - 1); }
+$('#share').onclick = async () => {
+  const url = location.href;
+  if (navigator.share) { try { await navigator.share({ title: '데우고 식히는 공기 탐험!', text: '어게인 실험과학 수학학원 · 데우고 식히는 공기 탐험 놀이', url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast('주소가 복사됐어요');
+};
+function svgPt(svg, e) { const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+function client(svg, x, y) { const p = svg.createSVGPoint(); p.x = x; p.y = y; const q = p.matrixTransform(svg.getScreenCTM()); return [q.x, q.y]; }
+// 공기 알갱이: 크기는 늘 같고, 빠르기와 움직일 수 있는 공간만 달라짐
+function makeDots(n, x0, y0, x1, y1) { return Array.from({ length: n }, () => ({ x: rand(x0, x1), y: rand(y0, y1), a: rand(0, 6.28) })); }
+function moveBox(d, sp, dt, x0, y0, x1, y1) {
+  let vx = Math.cos(d.a) * sp, vy = Math.sin(d.a) * sp;
+  d.x += vx * dt; d.y += vy * dt;
+  if (d.x < x0) { d.x = x0; vx = Math.abs(vx); } if (d.x > x1) { d.x = x1; vx = -Math.abs(vx); }
+  if (d.y < y0) { d.y = y0; vy = Math.abs(vy); } if (d.y > y1) { d.y = y1; vy = -Math.abs(vy); }
+  d.a = Math.atan2(vy, vx) + rand(-.05, .05);
+}
+const dotSvg = (d, r, fill = '#9fd6f6', st = '#3a9ae0') => `<circle cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="${st}" stroke-width="${(r / 5).toFixed(1)}"/>`;
+// 보이는 탭의 장면만 움직임
+const loops = [];
+const loop = (i, fn) => loops.push([i, fn]);
+let lastT = performance.now();
+requestAnimationFrame(function frame(now) {
+  const dt = Math.min(40, now - lastT); lastT = now;
+  for (const [i, fn] of loops) if (panels[i].classList.contains('on')) fn(dt, now);
+  requestAnimationFrame(frame);
+});
+
+/* =========== 1. 병 위 동전 =========== */
+(() => {
+  const svg = $('#s1'), hit = $('#hit1'), hint = $('#h1'), cap = $('#cap1'), coin = $('#coin1'), ddk = $('#ddk1'), re = $('#re1');
+  const X0 = 684, X1 = 916, Y0 = 440, Y1 = 768, N = 22, MIN = 15;
+  let down = false, T = 0, hp = 0, dots, esc = [], lastPuff = 0, jig = 0, puffs = 0, won = false, saidHold = false, wasDown = false;
+  $('#frost1').innerHTML = Array.from({ length: 34 }, () => `<circle cx="${rand(655, 945).toFixed(0)}" cy="${rand(420, 785).toFixed(0)}" r="${rand(3, 8).toFixed(1)}"/>`).join('')
+    + `<path d="M700 520 l14 14 m0 -14 l-14 14 M890 650 l14 14 m0 -14 l-14 14 M760 720 l14 14 m0 -14 l-14 14" stroke="#fff" stroke-width="4"/>`;
+  const reset = () => { T = 0; dots = makeDots(N, X0, Y0, X1, Y1); esc = []; puffs = 0; re.hidden = true; };
+  reset();
+  re.onclick = () => { reset(); won = false; sfx.pop(); coach('#b1', '새 <b class="c">차가운 병</b>이에요. 다시 <b>두 손으로 꾹</b> 잡아 볼까요?'); };
+  hit.addEventListener('pointerdown', e => {
+    e.preventDefault(); audio(); down = true; try { hit.setPointerCapture(e.pointerId); } catch (_) {} hint.hidden = true;
+    if (!saidHold) { saidHold = true; coach('#b1', '따뜻한 손으로 병을 꼭 잡았어요.<br>손을 떼지 말고 <b>동전</b>을 잘 보세요!'); }
+  });
+  const up = () => down = false;
+  hit.addEventListener('pointerup', up); hit.addEventListener('pointercancel', up);
+  loop(0, (dt, now) => {
+    T = down ? T + (1 - T) * dt / 3500 : T - T * dt / 7000;
+    hp += ((down ? 1 : 0) - hp) * Math.min(1, dt / 160);
+    // 손
+    const hx = lerp(390, 590, hp);
+    $('#hl1').setAttribute('transform', `translate(${hx} 590)`); $('#hr1').setAttribute('transform', `translate(${1600 - hx} 590) scale(-1 1)`);
+    $('#hl1').setAttribute('opacity', (.5 + .5 * hp).toFixed(2)); $('#hr1').setAttribute('opacity', (.5 + .5 * hp).toFixed(2));
+    $('#warm1').setAttribute('opacity', (hp * .9).toFixed(2));
+    // 병과 온도계
+    $('#bot1').setAttribute('stroke', tcol(T)); $('#frost1').setAttribute('opacity', (1 - T * 1.3).toFixed(2));
+    const fh = 20 + 400 * T; $('#thf1').setAttribute('y', 720 - fh); $('#thf1').setAttribute('height', fh);
+    $('#thf1').setAttribute('fill', tcol(T)); $('#thb1').setAttribute('fill', tcol(T));
+    const tt = $('#tht1'); tt.textContent = T < .25 ? '차가워요' : T < .6 ? '미지근해요' : '따뜻해요'; tt.setAttribute('fill', T < .25 ? '#2476b8' : '#c85f00');
+    // 알갱이: 데워질수록 빨라짐 (크기는 그대로)
+    const sp = .05 + .45 * T;
+    dots.forEach(d => moveBox(d, sp, dt, X0, Y0, X1, Y1));
+    // 데워지는 동안 부피가 커진 공기가 동전 틈으로 조금 빠져나감
+    if (down && T > .25 && T < .96 && dots.length > MIN && now - lastPuff > 650) {
+      lastPuff = now; jig = 1; puffs++;
+      let k = 0; dots.forEach((d, i) => { if (d.y < dots[k].y) k = i; });
+      dots.splice(k, 1);
+      esc.push({ x: 860, y: 214, vx: .32, vy: -.12, life: 1 });
+      sfx.click(); ddk.setAttribute('opacity', 1);
+      if (puffs === 3 && !won) {
+        won = true;
+        coach('#b1', '동전이 <b>딸깍 딸깍</b> 움직여요!<br>손의 온기가 병 속 공기를 데워 <b>부피가 커졌어요</b>!');
+        finish(0, '#c1');
+      }
+    }
+    if (wasDown && !down && puffs) { coach('#b1', '손을 떼니 동전이 <b>멈췄어요</b>.<br>병 속 공기가 더 이상 데워지지 않으니까요.'); re.hidden = false; }
+    wasDown = down;
+    jig = Math.max(0, jig - dt / 220);
+    const lift = Math.sin(jig * Math.PI);
+    coin.setAttribute('transform', `rotate(${(-lift * 9).toFixed(2)} 722 214)`);
+    ddk.setAttribute('opacity', Math.max(0, +ddk.getAttribute('opacity') - dt / 600).toFixed(2));
+    esc.forEach(e => { e.x += e.vx * dt; e.y += e.vy * dt; e.life -= dt / 1100; });
+    esc = esc.filter(e => e.life > 0);
+    $('#dot1').innerHTML = dots.map(d => dotSvg(d, 13)).join('');
+    $('#esc1').innerHTML = esc.map(e => `<g opacity="${e.life.toFixed(2)}">${dotSvg(e, 13)}</g>`).join('');
+    if (down && T > .25) setCap(cap, '딸깍 딸깍! 동전이 들썩여요', 'hot');
+    else if (down) setCap(cap, '손으로 병을 데우는 중…', 'hot');
+    else if (T > .25) setCap(cap, '손을 떼니 동전이 멈췄어요', '');
+    else setCap(cap, '차가운 병이에요. 동전이 가만히 있어요.', 'cold');
+  });
+})();
+
+/* =========== 2. 풍선 플라스크 =========== */
+(() => {
+  const svg = $('#s2'), fl = $('#fl2'), bal = $('#bal2'), hint = $('#h2'), cap = $('#cap2'), word = $('#word2'), zd = $('#zd2');
+  const HOME = 800, HOT = 310, COLD = 1290, BASE = 820;
+  let fx = HOME, fy = BASE, tx = HOME, drag = false, ox = 0, oy = 0, t = 0, target = 0, zone = 0, wordA = 0;
+  let seenHot = false, seenCold = false, everHot = false, everCold = false, won = false;
+  const dots = makeDots(14, -60, -60, 60, 60);
+  fl.addEventListener('pointerdown', e => {
+    e.preventDefault(); audio(); drag = true; try { svg.setPointerCapture(e.pointerId); } catch (_) {} hint.hidden = true; fl.style.cursor = 'grabbing';
+    const p = svgPt(svg, e); ox = p.x - fx; oy = p.y - fy;
+  });
+  svg.addEventListener('pointermove', e => { if (!drag) return; const p = svgPt(svg, e); fx = clamp(p.x - ox, 160, 1440); fy = clamp(p.y - oy, 560, BASE); });
+  const drop = () => {
+    if (!drag) return; drag = false; fl.style.cursor = 'grab';
+    zone = Math.abs(fx - HOT) < 260 ? 1 : Math.abs(fx - COLD) < 260 ? -1 : 0;
+    tx = zone > 0 ? HOT : zone < 0 ? COLD : HOME; target = zone; sfx.splash();
+    if (zone > 0) coach('#b2', '<b>뜨거운 물</b>에 넣었어요. 풍선을 잘 보세요!');
+    else if (zone < 0) coach('#b2', '<b class="c">얼음물</b>에 넣었어요. 풍선을 잘 보세요!');
+    else coach('#b2', '물 밖으로 꺼냈어요. 다시 <b>뜨거운 물</b>이나 <b class="c">얼음물</b>에 넣어 볼까요?');
+  };
+  svg.addEventListener('pointerup', drop); svg.addEventListener('pointercancel', drop);
+  function balloon(t) {
+    const C = '#ff6b8a', S = '#d94a6a';
+    let s = `<rect x="-38" y="-345" width="76" height="22" rx="8" fill="${C}" stroke="${S}" stroke-width="5"/>`;
+    if (t > .02) {
+      const r = 34 + 106 * t, cy = -345 - r * .92;
+      s = `<path d="M-30 -340 Q-22 ${(-345 - r * .25).toFixed(1)} -16 ${(cy + r * .85).toFixed(1)} L16 ${(cy + r * .85).toFixed(1)} Q22 ${(-345 - r * .25).toFixed(1)} 30 -340Z" fill="${C}"/>`
+        + `<ellipse cy="${cy.toFixed(1)}" rx="${(r * .86).toFixed(1)}" ry="${r.toFixed(1)}" fill="${C}" stroke="${S}" stroke-width="5"/>`
+        + `<ellipse cx="${(-r * .32).toFixed(1)}" cy="${(cy - r * .38).toFixed(1)}" rx="${(r * .13).toFixed(1)}" ry="${(r * .26).toFixed(1)}" fill="#fff" opacity=".55" transform="rotate(-25 ${(-r * .32).toFixed(1)} ${(cy - r * .38).toFixed(1)})"/>` + s;
+    } else {
+      const u = clamp(-t, 0, 1), k = 1 - u * .75;
+      // 축 늘어진 풍선 (식을수록 작아지고 입구 안으로 들어감)
+      s = `<path d="M-30 -342 Q-40 ${(-342 - 60 * k).toFixed(1)} 10 ${(-342 - 70 * k).toFixed(1)} Q${(70 + 40 * k).toFixed(1)} ${(-340 - 50 * k).toFixed(1)} ${(60 + 50 * k).toFixed(1)} ${(-300 + 10 * k).toFixed(1)} Q${(40 + 30 * k).toFixed(1)} -320 30 -342Z" fill="${C}" stroke="${S}" stroke-width="5" stroke-linejoin="round"/>` + s;
+      if (u > .05) {
+        const d = -330 + u * 120;
+        s = `<path d="M-22 -334 V${(d - 22).toFixed(1)} Q-22 ${d.toFixed(1)} 0 ${d.toFixed(1)} Q22 ${d.toFixed(1)} 22 ${(d - 22).toFixed(1)} V-334Z" fill="${C}" opacity=".85" stroke="${S}" stroke-width="4"/>` + s;
+      }
+      if (u > .6) s += `<g opacity="${((u - .6) / .4).toFixed(2)}"><path d="M-110 -500 L-40 -400 M110 -500 L40 -400 M0 -520 V-420" stroke="#ff8a1f" stroke-width="18" stroke-linecap="round" marker-end="url(#aho)"/>`
+        + `<text y="-540" text-anchor="middle" font-family="Jua" font-size="46" fill="#c85f00">바깥 공기가 밀어요</text></g>`;
+    }
+    return s;
+  }
+  loop(1, (dt, now) => {
+    if (!drag) { fx += (tx - fx) * Math.min(1, dt / 120); fy += (BASE - fy) * Math.min(1, dt / 120); }
+    const settled = !drag && Math.abs(fx - tx) < 4;
+    if (settled) t += ((zone ? target : 0) - t) * Math.min(1, dt / 1600);
+    else t += (0 - t) * Math.min(1, dt / 4000);
+    fl.setAttribute('transform', `translate(${fx.toFixed(1)} ${fy.toFixed(1)})`);
+    bal.innerHTML = balloon(t);
+    // 확대 동그라미: 같은 14개 알갱이가 데우면 빠르게 넓게, 식히면 천천히 좁게
+    const R = 86 + 26 * t, sp = .07 + .11 * t;
+    zd.innerHTML = dots.map(d => { moveBox(d, sp, dt, -R, -R, R, R); return dotSvg(d, 12); }).join('');
+    $('#zbg2').setAttribute('fill', t > 0 ? `rgba(255,138,31,${(t * .2).toFixed(2)})` : `rgba(58,154,224,${(-t * .2).toFixed(2)})`);
+    $('#zoomline2').innerHTML = `<path d="M800 293 L${fx.toFixed(0)} ${(fy - 140).toFixed(0)}" stroke="#aab6c2" stroke-width="5" stroke-dasharray="14 12"/>`;
+    if (settled && zone > 0 && t > .8 && !seenHot) {
+      seenHot = true; sfx.puff(); word.textContent = '쑥!'; word.setAttribute('x', HOT); wordA = 1;
+      const [x, y] = client(svg, HOT, 300); sparkle(x, y, 18);
+      coach('#b2', seenCold ? '풍선이 다시 <b>쑥</b> 부풀었어요!' : '풍선이 <b>쑥</b> 부풀어 일어났어요! 플라스크 속 공기의 <b>부피가 커졌어요</b>.<br>이번엔 <b class="c">얼음물</b>에 넣어 볼까요?');
+    }
+    if (settled && zone < 0 && t < -.8 && !seenCold) {
+      seenCold = true; sfx.shrink(); word.textContent = '쏙!'; word.setAttribute('x', COLD); wordA = 1;
+      const [x, y] = client(svg, COLD, 300); sparkle(x, y, 18);
+      coach('#b2', '풍선이 <b class="c">쏙</b> 쪼그라들었어요! 공기의 <b>부피가 작아지자</b>,<br><b>바깥 공기가</b> 풍선을 입구 쪽으로 밀어 넣었어요.' + (seenHot ? '' : ' 이번엔 <b>뜨거운 물</b>에 넣어 볼까요?'));
+    }
+    if (zone > 0 && t < .3) seenHot = false;
+    if (zone < 0 && t > -.3) seenCold = false;
+    everHot = everHot || seenHot; everCold = everCold || seenCold;
+    if (everHot && everCold && !won) { won = true; setTimeout(() => finish(1, '#c2'), 700); }
+    wordA = Math.max(0, wordA - dt / 1400); word.setAttribute('opacity', Math.min(1, wordA * 2).toFixed(2));
+    word.setAttribute('y', 400 - (1 - wordA) * 40);
+    if (t > .5) setCap(cap, '데우면 쑥! 풍선이 부풀어요', 'hot');
+    else if (t < -.5) setCap(cap, '식히면 쏙! 풍선이 쪼그라들어요', 'cold');
+    else setCap(cap, '방 안 온도예요. 풍선이 축 늘어져 있어요.', '');
+  });
+})();
+
+/* =========== 3. 찌그러지는 캔 =========== */
+(() => {
+  const can = $('#can3'), tong = $('#tong3'), arr = $('#arr3'), bbak = $('#bbak3'), stm = $('#stm3'), cap = $('#cap3');
+  const desk = $('#desk3'), cold = $('#cold3'), re = $('#re3'), st = $('#st3');
+  let P = { x: 800, y: 590, r: 0 }, c = 0, steam = 1, heat = 1, anims = [], busy = false, crushT = -1, tongOn = false;
+  arr.innerHTML = Array.from({ length: 8 }, (_, i) => {
+    const a = i * Math.PI / 4, x1 = 1300 + Math.cos(a) * 290, y1 = 470 + Math.sin(a) * 260, x2 = 1300 + Math.cos(a) * 175, y2 = 470 + Math.sin(a) * 175;
+    return `<path d="M${x1.toFixed(0)} ${y1.toFixed(0)} L${x2.toFixed(0)} ${y2.toFixed(0)}" stroke="#ff8a1f" stroke-width="22" stroke-linecap="round" marker-end="url(#aho)"/>`;
+  }).join('') + `<rect x="1110" y="140" width="380" height="64" rx="32" fill="#fff" stroke="#ff8a1f" stroke-width="5"/><text x="1300" y="186" text-anchor="middle" font-family="Jua" font-size="44" fill="#c85f00">바깥 공기가 눌러요</text>`;
+  function canSvg() {
+    // c: 0 멀쩡함 → 1 찌그러짐 (옆구리가 안쪽으로 쑥 들어감)
+    const L = [], R = [];
+    for (let i = 0; i <= 10; i++) {
+      const y = -150 + i * 30, m = Math.sin(i / 10 * Math.PI), z = (i % 2 ? 1 : .55) * m;
+      L.push(`${(-80 + c * 58 * z).toFixed(1)} ${(y * (1 - c * .12)).toFixed(1)}`);
+      R.push(`${(80 - c * 52 * (i % 2 ? .6 : 1) * m).toFixed(1)} ${(y * (1 - c * .12)).toFixed(1)}`);
+    }
+    const top = -150 * (1 - c * .12), bot = 150 * (1 - c * .12);
+    return `<g transform="translate(${P.x.toFixed(1)} ${P.y.toFixed(1)}) rotate(${P.r.toFixed(1)})">
+      <path d="M${L.join(' L')} L${R.reverse().join(' L')} Z" fill="#cfd8e0" stroke="#7d8a97" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="-80" y="${(top - 4).toFixed(1)}" width="160" height="16" rx="8" fill="#aab6c2"/>
+      <rect x="-80" y="${(bot - 12).toFixed(1)}" width="160" height="16" rx="8" fill="#aab6c2"/>
+      <ellipse cx="22" cy="${(top + 4).toFixed(1)}" rx="26" ry="7" fill="#33414f"/>
+      <path d="M${(-46 + c * 30).toFixed(1)} -70 Q${(-30 + c * 40).toFixed(1)} 0 ${(-46 + c * 30).toFixed(1)} 70" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" opacity=".6"/>
+      <rect x="-60" y="-40" width="120" height="70" rx="12" fill="${heat > .1 ? tcol(heat) : '#7cc4ee'}" opacity=".85"/>
+    </g>`;
+  }
+  // 차례로 움직이는 짧은 애니메이션
+  function tween(to, dur, fn) { anims.push({ to, dur, fn, from: null, t: 0 }); }
+  function setBtns(on) { busy = !on; desk.disabled = cold.disabled = !on; }
+  desk.onclick = () => {
+    audio(); sfx.pop(); setBtns(false);
+    coach('#b3', '뜨거운 캔을 <b>책상</b>에 그냥 두었어요. 어떻게 될까요?');
+    tween({ x: 320, y: 545, r: 0 }, 900, () => {
+      coach('#b3', '캔이 <b>천천히</b> 식어요. 캔은 <b>거의 그대로</b>예요!<br><b>다시 데우기</b>를 누르고, 이번엔 <b class="c">찬물에 거꾸로</b> 담가 볼까요?');
+      re.hidden = false; desk.disabled = true; cold.disabled = true;
+    });
+  };
+  cold.onclick = () => {
+    audio(); sfx.pop(); setBtns(false); tongOn = true; show(tong, true);
+    coach('#b3', '집게로 뜨거운 캔을 잡아서 <b class="c">찬물</b>에 거꾸로 담가요…');
+    tween({ x: P.x, y: 330, r: 0 }, 500);
+    tween({ x: 1300, y: 330, r: 180 }, 800);
+    tween({ x: 1300, y: 470, r: 180 }, 420, () => {
+      sfx.splash(); sfx.sizzle(); crushT = 0; steam = 0;
+      setTimeout(() => {
+        sfx.bang(); show(bbak, true); show(arr, true); st.classList.remove('shake'); void st.offsetWidth; st.classList.add('shake');
+        const svg = $('#s3'), [x, y] = client(svg, 1300, 470); sparkle(x, y, 26);
+        coach('#b3', '<b>빡!</b> 캔이 한순간에 찌그러졌어요!<br>캔 속이 확 식어 안쪽 공기압이 약해지자, <b>바깥 공기가</b> 캔을 눌렀어요.');
+        finish(2, '#c3'); re.hidden = false; tongOn = false; show(tong, false);
+      }, 260);
+    });
+  };
+  re.onclick = () => {
+    sfx.pop(); anims = []; P = { x: 800, y: 590, r: 0 }; c = 0; steam = 1; heat = 1; crushT = -1; tongOn = false;
+    show(tong, false); show(arr, false); show(bbak, false); re.hidden = true; setBtns(true);
+    coach('#b3', '캔을 다시 <b>뜨겁게</b> 데웠어요. 김이 모락모락!<br>이번엔 어떻게 해 볼까요?');
+  };
+  loop(2, (dt, now) => {
+    const a = anims[0];
+    if (a) {
+      if (!a.from) a.from = { ...P };
+      a.t = Math.min(1, a.t + dt / a.dur); const e = a.t < .5 ? 2 * a.t * a.t : 1 - Math.pow(-2 * a.t + 2, 2) / 2;
+      P = { x: lerp(a.from.x, a.to.x, e), y: lerp(a.from.y, a.to.y, e), r: lerp(a.from.r, a.to.r, e) };
+      if (a.t >= 1) { anims.shift(); a.fn && a.fn(); }
+    }
+    if (crushT >= 0) { crushT += dt; c = clamp((crushT - 260) / 140, 0, 1); heat = Math.max(0, heat - dt / 300); }
+    else if (P.x < 600) { steam = Math.max(.15, steam - dt / 2600); heat = Math.max(.35, heat - dt / 3000); }
+    $('#plate3').setAttribute('fill', P.x > 700 && P.x < 900 && P.y > 500 ? '#ff7a3d' : '#b0bac4');
+    can.innerHTML = canSvg();
+    stm.setAttribute('transform', `translate(${(P.x - 800).toFixed(1)} ${(P.y - 590).toFixed(1)})`);
+    stm.setAttribute('opacity', (P.r < 30 ? steam : 0).toFixed(2));
+    if (tongOn) tong.innerHTML = `<path d="M${P.x + 70} ${P.y - 30} L${P.x + 300} ${P.y - 250}"/><path d="M${P.x + 70} ${P.y + 30} L${P.x + 300} ${P.y - 230}"/>`;
+    if (c > .5) setCap(cap, '빡! 바깥 공기가 캔을 눌렀어요', 'hot');
+    else if (P.x < 600 && !anims.length) setCap(cap, '천천히 식어요. 캔은 거의 그대로!', '');
+    else if (!busy) setCap(cap, '따끈따끈 데운 캔이에요', 'hot');
+  });
+})();
+
+/* =========== 4. 공기 알갱이 =========== */
+(() => {
+  const svg = $('#s4'), sl = $('#tmp4'), pis = $('#pis4'), dotsG = $('#dot4');
+  const X0 = 150, Y0 = 222, Y1 = 688, R = 22;
+  let W = 650 + 700 * .45, sawHot = false, sawCold = false, won = false;
+  const dots = makeDots(18, X0 + R, Y0 + R, W - R, Y1 - R);
+  sl.addEventListener('input', () => audio());
+  loop(3, (dt, now) => {
+    const s = sl.value / 100, k = Math.min(1, dt / 500);
+    const oldW = W; W += (650 + 700 * s - W) * k;
+    // 벽이 움직이면 알갱이 사이 거리도 함께 늘거나 줄어듦 (한쪽에 몰리지 않게)
+    const L = X0 + R + 4, f = (W - R - L) / (oldW - R - L);
+    dots.forEach(d => d.x = L + (d.x - L) * f);
+    const sp = .03 + .55 * s;
+    dots.forEach(d => moveBox(d, sp, dt, X0 + R + 4, Y0 + R, W - R, Y1 - R));
+    dotsG.innerHTML = dots.map(d => dotSvg(d, R)).join('');
+    pis.setAttribute('transform', `translate(${W.toFixed(1)} 0)`);
+    $('#boxbg4').setAttribute('width', (W - X0).toFixed(1));
+    $('#boxbg4').setAttribute('fill', s > .5 ? `rgba(255,138,31,${((s - .5) * .3).toFixed(2)})` : `rgba(58,154,224,${((.5 - s) * .3).toFixed(2)})`);
+    $('#heat4').setAttribute('fill', tcol(s));
+    $('#heatT4').textContent = s < .3 ? '❄️ 차갑게 식히는 중' : s > .7 ? '🔥 따뜻하게 데우는 중' : '';
+    $('#volp4').setAttribute('d', `M${X0} 770 V790 H${W.toFixed(1)} V770`);
+    const vt = $('#volt4'); vt.setAttribute('x', ((X0 + W) / 2).toFixed(1));
+    vt.textContent = s < .25 ? '부피가 작아졌어요' : s > .75 ? '부피가 커졌어요' : '부피';
+    vt.setAttribute('fill', s < .25 ? '#2476b8' : s > .75 ? '#c85f00' : '#6c7a8a');
+    if (s > .85 && !sawHot) {
+      sawHot = true; sfx.puff();
+      coach('#b4', '따뜻해지니 알갱이가 <b>빠르게</b> 움직이며 벽을 밀어서,<br>알갱이 사이가 멀어지고 <b>부피가 커졌어요</b>!');
+    }
+    if (s < .15 && !sawCold) {
+      sawCold = true; sfx.shrink();
+      coach('#b4', '차가워지니 알갱이가 <b class="c">천천히</b> 움직이며 가까이 모여서,<br><b class="c">부피가 작아졌어요</b>! 알갱이 수는 그대로예요.');
+    }
+    if (sawHot && sawCold && !won) { won = true; finish(3, '#c4'); }
+  });
+})();
+
+/* =========== 5. O/X 퀴즈 =========== */
+(() => {
+  const Q = [
+    { q: '공기를 데우면 부피가 커진다.', a: true, ok: '딩동댕! 공기를 데우면 부피가 커져요.', no: '다시 생각해 봐요! 병을 손으로 꼭 잡았을 때 동전이 왜 들썩였나요?' },
+    { q: '공기를 식히면 공기가 없어진다.', a: false, ok: '딩동댕! 공기가 없어진 게 아니라, 같은 공기가 좁게 모인 거예요.', no: '다시 생각해 봐요! 식힌 공기는 사라졌을까요, 좁게 모였을까요?' },
+    { q: '공기를 데우면 공기 알갱이가 커진다.', a: false, ok: '딩동댕! 알갱이는 커지지 않아요. 알갱이 사이가 멀어져요.', no: '다시 생각해 봐요! 공기 알갱이 놀이에서 알갱이 크기가 달라졌나요?' },
+    { q: '캔이 바깥 공기를 빨아들여서 찌그러졌다.', a: false, ok: '딩동댕! 빨아들인 게 아니에요. 바깥 공기가 캔을 눌렀어요.', no: '다시 생각해 봐요! 캔을 꾹 누른 것은 어느 쪽 공기였나요?' },
+    { q: '얼음물에 넣은 플라스크의 풍선은 쪼그라든다.', a: true, ok: '딩동댕! 공기의 부피가 작아져서 풍선이 쪼그라들어요.', no: '다시 생각해 봐요! 얼음물에 넣었을 때 풍선은 어떻게 됐나요?' }
+  ];
+  const qb = $('#q5'), fb = $('#fb5'), o = $('#o5'), x = $('#x5'), nx = $('#nx5'), re = $('#re5'), dots = $('#dots5');
+  let i = 0, lock = false;
+  dots.innerHTML = Q.map((_, j) => `<i>${j + 1}</i>`).join('');
+  function say(t, cls) { fb.className = 'qfb'; void fb.offsetWidth; fb.className = 'qfb ' + cls; fb.textContent = t; }
+  function ask() {
+    lock = false; o.disabled = x.disabled = false; o.classList.remove('pick'); x.classList.remove('pick'); nx.hidden = true;
+    qb.innerHTML = `<small>문제 ${i + 1} / ${Q.length}</small><span>${Q[i].q}</span>`;
+    fb.className = 'qfb'; fb.textContent = '맞으면 O, 틀리면 X를 눌러요!';
+    [...dots.children].forEach((d, j) => { d.className = j < i ? 'ok' : j === i ? 'now' : ''; });
+  }
+  function ans(v, btn, e) {
+    if (lock) return; audio();
+    if (v !== Q[i].a) { sfx.bad(); say(Q[i].no, 'bad'); return; }
+    lock = true; o.disabled = x.disabled = true; btn.classList.add('pick'); dots.children[i].className = 'ok';
+    say(Q[i].ok, 'good'); sparkle(e.clientX, e.clientY, 18);
+    if (i < Q.length - 1) { sfx.good(); nx.hidden = false; }
+    else { re.hidden = false; coach('#b5', '다섯 문제를 모두 풀었어요! 정말 잘했어요.<br>공기를 데우면 <b>부피가 커지고</b>, 식히면 <b class="c">부피가 작아져요</b>.'); finish(4, '#c5'); }
+  }
+  o.onclick = e => ans(true, o, e); x.onclick = e => ans(false, x, e);
+  nx.onclick = () => { i++; sfx.pop(); ask(); };
+  re.onclick = () => { i = 0; re.hidden = true; $('#c5').classList.remove('on'); sfx.pop(); ask(); };
+  ask();
+})();
+</script>
+</body>
+</html>
