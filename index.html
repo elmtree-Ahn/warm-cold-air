@@ -271,7 +271,7 @@ footer .tel{margin-top:4px;font-size:18px}
       <text id="word2" x="800" y="420" text-anchor="middle" font-family="Jua" font-size="80" fill="#c85f00" opacity="0"></text>
     </svg>
     <div class="hint" id="h2" style="left:50%;top:44%">⬅ 플라스크를 끌어요 ➡</div>
-    <div class="cap" id="cap2">방 안 온도예요. 풍선이 축 늘어져 있어요.</div>
+    <div class="cap" id="cap2">풍선이 축 늘어져 있어요</div>
   </div>
   <div class="card" id="c2"><span class="big">데우면 쑥! 식히면 쏙!</span>뜨거운 물에서는 플라스크 속 공기의 부피가 커져서 풍선이 부풀어요. 얼음물에서는 공기의 부피가 작아지고, 바깥 공기가 풍선을 입구 쪽으로 밀어 넣어요.</div>
 </section>
@@ -618,9 +618,9 @@ requestAnimationFrame(function frame(now) {
     if (everHot && everCold && !won) { won = true; setTimeout(() => finish(1, '#c2'), 700); }
     wordA = Math.max(0, wordA - dt / 1400); word.setAttribute('opacity', Math.min(1, wordA * 2).toFixed(2));
     word.setAttribute('y', 400 - (1 - wordA) * 40);
-    if (t > .5) setCap(cap, '데우면 쑥! 풍선이 부풀어요', 'hot');
-    else if (t < -.5) setCap(cap, '식히면 쏙! 풍선이 쪼그라들어요', 'cold');
-    else setCap(cap, '방 안 온도예요. 풍선이 축 늘어져 있어요.', '');
+    if (t > .5) setCap(cap, '데우면 쑥! 부풀어요', 'hot');
+    else if (t < -.5) setCap(cap, '식히면 쏙! 쪼그라들어요', 'cold');
+    else setCap(cap, '풍선이 축 늘어져 있어요', '');
   });
 })();
 
